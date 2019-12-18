@@ -95,7 +95,7 @@
 	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
 		<!-- basePackage :mapper接口所在的包 -->
 		<!-- todo -->
-		<property name="basePackage" value="com.qinfei.mapper"></property>
+		<property name="basePackage" value="com.qinfei.dao"></property>
 
 	</bean>
 
