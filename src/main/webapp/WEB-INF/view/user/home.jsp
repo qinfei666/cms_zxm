@@ -80,7 +80,7 @@ background:red;
 		    <a class="nav-link active" href="#" onclick="showWork($(this),'/user/articles') ">我的文章</a>
 		  </li>											 
 		  <li class="nav-item">
-		    <a class="nav-link" href="#" onclick="showWork($(this),'/user/postArticle')">发表文章</a>
+		    <a id="postLink" class="nav-link" href="#" onclick="showWork($(this),'/user/postArticle')">发表文章</a>
 		  </li>
 		  <li class="nav-item">
 		    <a class="nav-link" href="#" onclick="showWork($(this),'/user/comments')">我的评论</a>

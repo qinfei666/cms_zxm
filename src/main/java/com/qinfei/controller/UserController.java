@@ -1,11 +1,17 @@
 package com.qinfei.controller;
 
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -13,8 +19,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.github.pagehelper.PageInfo;
+import com.qinfei.cms.utils.FileUtils;
 import com.qinfei.cms.utils.HtmlUtils;
 import com.qinfei.cms.utils.StringUtils;
 import com.qinfei.common.Contantant;
@@ -28,6 +36,12 @@ import com.qinfei.service.UserService;
 @Controller
 @RequestMapping("user")
 public class UserController {
+	
+	@Value("${upload.path}")
+	String picRootPath;
+	@Value("${pic.path}")
+	String picUrl;
+	
 	@Autowired
 	UserService service;
 	@Autowired
@@ -161,6 +175,49 @@ public class UserController {
 		return categoryisByCid;
 	}
 	
+	
+	@RequestMapping(value="postArticle",method=RequestMethod.POST)
+	@ResponseBody
+	public boolean postArticle(HttpServletRequest request,Article article,
+			MultipartFile file
+			) {
+		String picUrl;
+		try {
+			picUrl = processFile(file);
+			article.setPicture(picUrl);
+		} catch (IllegalStateException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		User LoginUser = (User) request.getSession().getAttribute(Contantant.USER_KEY);
+		article.setUserId(LoginUser.getId());
+		return articleService.add(article)>0;
+	}
+	
+	
+	private String processFile(MultipartFile file) throws IllegalStateException, IOException{
+		//判断目标时间是否存在
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+		String subPath = sdf.format(new Date());
+		
+		File path = new File(picRootPath+"/"+subPath);
+		if (!path.exists()) {
+			//路径不存在则创建
+			path.mkdirs();
+		}
+		//计算新的文件名称
+		String suffixName = FileUtils.getSuffixName(file.getOriginalFilename());
+		//随机生成文件名
+		String fileName = UUID.randomUUID().toString()+suffixName;
+	
+		file.transferTo(new File(picRootPath+"/"+subPath+"/"+fileName));
+		
+		return subPath+"/"+fileName;
+	}
+	
 	/**
 	 * 跳转到修改文章的页面
 	 * @param request
@@ -186,4 +243,30 @@ public class UserController {
 		
 		return "/user/articles/update";
 	}
+	/**
+	 * 接收修改文章页面提交的数据
+	 * @param request
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping(value="updateArticle",method=RequestMethod.POST)
+	@ResponseBody
+	public boolean updateArticle(HttpServletRequest request,Article article,MultipartFile file){
+		String picUrl;
+		try {
+			picUrl = processFile(file);
+			article.setPicture(picUrl);
+		} catch (IllegalStateException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		User LoginUser = (User) request.getSession().getAttribute(Contantant.USER_KEY);
+//		article.setUserId(LoginUser.getId());
+		int updateResult = articleService.updated(article,LoginUser.getId());
+		return updateResult>0;
+	}
+	
 }

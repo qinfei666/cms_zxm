@@ -33,5 +33,33 @@ public interface ArticleService {
 	List<category>getCategoryisByCid(int cid);
 
 	Article getById(int id);
+	/*
+	 * 获取文章的简要信息,判断文章的存在性
+	 */
+	Article getInfoById(int id);
+	/**
+	 * 发布文章
+	 * @param article
+	 */
+	int add(Article article);
+	/**
+	 * 
+	 * @param article
+	 * @param id
+	 * @return
+	 */
+	int updated(Article article, Integer id);
+
+	/**
+	 * 获取文章列表
+	 * @param status
+	 * @param pageNum
+	 * @return
+	 */
+	PageInfo<Article> list(int status, int pageNum);
+
+	int setHot(int id, int status);
+
+	int setCheckStatus(int id, int status);
 
 }

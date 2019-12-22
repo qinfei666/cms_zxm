@@ -3,7 +3,7 @@
     <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 新建文章
-<form>
+<form name="articleform" id="articlefrom">
   <div class="form-group">
     <label for="title">标题</label>
     <input type="text" class="form-control" id="title" name="title" placeholder="请输入文章标题">
@@ -81,6 +81,20 @@ $("#channel").change(function(){
 		}  */
 function add() {
 	alert(editor.html())
+	var formdata = new FormData($("#articlefrom")[0])
+	formdata.set("content",editor.html())
+	$.ajax({
+		url:"postArticle",
+		dataType:"json",
+		processData:false,
+		contentType:false,
+		data:formdata,
+		type:"post",
+		success:function(data){
+			//$("#workcontent").load("/user/articles")
+			showWork($("#postLink"),"/user/articles")
+		}
+	})
 }
 
 

@@ -4,7 +4,8 @@
 
 
 修改文章
-<form>
+<form name="articleform" id="articlefrom">
+<input type="hidden" name="id" value="${article.id }">
   <div class="form-group">
     <label for="title">标题</label>
     <input type="text" class="form-control" id="title" name="title" value="${article.title }" placeholder="请输入文章标题">
@@ -16,7 +17,7 @@
       <option value="0">--请选择--</option>
       <c:forEach items="${channels }" var="cat">
       		<!-- 下拉框回显 -->
-      		<option value="${cat.id }" ${article.channelId==cat.id?"checked":"" }>${cat.name }</option>
+      		<option value="${cat.id }" ${article.channelId==cat.id?"selected":"" }>${cat.name }</option>
       </c:forEach>
     </select>
   </div>
@@ -36,26 +37,31 @@
     <textarea class="form-control" id="contentId" name="content1" rows="20" cols="300">${content1 }</textarea>
   </div>
   <div class="form-group">
-  <input type="button" class="btn btn-primary mb-2" value="提交"/>
+  <input type="button" class="btn btn-primary mb-2" value="提交" onclick="commtiArticle()"/>
   </div>
 </form>
 <script type="text/javascript">
-$("#channel").change(function(){
+function channelChange(){
+
 	console.log("选中的数据是:"+$("#channel").val())
 	$.post("/user/getCategoris",{cid:$("#channel").val()},function(data){
 		$("#category").empty();
 		for ( var i in data) {
 			if(data[i].id=='${article.categoryId}'){
-				$("#category").append("<option checked value='"+data[i].id+"'>"+data[i].name+"</option>")
+				$("#category").append("<option selected value='"+data[i].id+"'>"+data[i].name+"</option>")
 			}else{
 				
 				$("#category").append("<option value='"+data[i].id+"'>"+data[i].name+"</option>")
 			}
 		}
 	},"json")
+}
+$("#channel").change(function(){
+	channelChange();
 })
+
   $(document).ready( function(){
-		 
+	  channelChange();
 		KindEditor.ready(function(K) {
 			//    textarea[name="content1"]
 			editor = K.create('#contentId', {
@@ -86,7 +92,24 @@ $("#channel").change(function(){
 			alert(editor1.html())
 			//alert( $("[name='content1']").attr("src"))
 		} 
-
+		//提交文章的修改
+		function commtiArticle() {
+			alert(editor.html())
+			var formdata = new FormData($("#articlefrom")[0])
+			formdata.set("content",editor.html())
+			$.ajax({
+				url:"updateArticle",
+				dataType:"json",
+				processData:false,
+				contentType:false,
+				data:formdata,
+				type:"post",
+				success:function(data){
+					//$("#workcontent").load("/user/articles")
+					showWork($("#postLink"),"/user/articles")
+				}
+			})
+		}
 
 
 </script>

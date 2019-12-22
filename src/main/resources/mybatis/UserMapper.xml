@@ -4,4 +4,7 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
   <mapper namespace="com.qinfei.dao.UserMapper">
  
+ 	<select id="findUserByid" resultType="user">
+ 		select id,username from cms_user where id=#{value}
+ 	</select>
   </mapper>

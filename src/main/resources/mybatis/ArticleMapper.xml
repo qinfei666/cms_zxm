@@ -11,12 +11,21 @@
   	</association>
   	<association property="category" column="category_id" javaType="com.qinfei.entity.category" select="findCategory">
   	</association>
+  	<association property="user" column="user_id" javaType="com.qinfei.entity.User" 
+  	select="com.qinfei.dao.UserMapper.findUserByid"></association>
   </resultMap>
  
  	<select id="listByUser" resultMap="artMapper">
- 		select id,title,channel_id,category_id,created,status
+ 		select id,title,channel_id,category_id,created,status,hot
  		from cms_article
  		where user_id=#{value} and deleted=0
+ 		order by id desc
+ 	</select>
+ 	
+ 	<select id="list" resultMap="artMapper">
+ 		select id,title,channel_id,category_id,user_id,created,status,hot
+ 		from cms_article
+ 		where status=#{value} and deleted=0
  		order by id desc
  	</select>
  	<!-- 获取频道 -->

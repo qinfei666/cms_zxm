@@ -50,4 +50,43 @@ public class ArticleServiceImpl implements ArticleService {
 		// TODO Auto-generated method stub
 		return articleMapper.getById(id);
 	}
+	@Override
+	public int add(Article article) {
+		// TODO Auto-generated method stub
+		return articleMapper.add(article);
+	}
+	@Override
+	public int updated(Article article, Integer userId) {
+		// TODO Auto-generated method stub
+		Article articleSrc = this.getById(article.getId());
+		if (articleSrc.getUserId()!=userId) {
+			//todo 如果不是自己的文章  需要.....
+		}
+		
+		return articleMapper.update(article);
+	}
+	@Override
+	public PageInfo<Article> list(int status, int pageNum) {
+		// TODO Auto-generated method stub
+		PageHelper.startPage(pageNum, Contantant.PAGE_SIZE);
+		return new PageInfo<Article>(articleMapper.list(status));
+	}
+	
+	@Override
+	public Article getInfoById(int id) {
+		// TODO Auto-generated method stub
+		return articleMapper.getInfoById(id);
+	}
+	
+	@Override
+	public int setCheckStatus(int id, int status) {
+		// TODO Auto-generated method stub
+		return articleMapper.setCheckStatus(id,status);
+	}
+	
+	@Override
+	public int setHot(int id, int status) {
+		// TODO Auto-generated method stub
+		return articleMapper.setHot(id,status);
+	}
 }
