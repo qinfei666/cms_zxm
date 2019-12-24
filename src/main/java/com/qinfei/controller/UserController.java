@@ -35,12 +35,9 @@ import com.qinfei.service.UserService;
 
 @Controller
 @RequestMapping("user")
-public class UserController {
+public class UserController extends BaseController{
 	
-	@Value("${upload.path}")
-	String picRootPath;
-	@Value("${pic.path}")
-	String picUrl;
+	
 	
 	@Autowired
 	UserService service;
@@ -198,25 +195,7 @@ public class UserController {
 	}
 	
 	
-	private String processFile(MultipartFile file) throws IllegalStateException, IOException{
-		//判断目标时间是否存在
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-		String subPath = sdf.format(new Date());
-		
-		File path = new File(picRootPath+"/"+subPath);
-		if (!path.exists()) {
-			//路径不存在则创建
-			path.mkdirs();
-		}
-		//计算新的文件名称
-		String suffixName = FileUtils.getSuffixName(file.getOriginalFilename());
-		//随机生成文件名
-		String fileName = UUID.randomUUID().toString()+suffixName;
 	
-		file.transferTo(new File(picRootPath+"/"+subPath+"/"+fileName));
-		
-		return subPath+"/"+fileName;
-	}
 	
 	/**
 	 * 跳转到修改文章的页面
@@ -267,6 +246,12 @@ public class UserController {
 //		article.setUserId(LoginUser.getId());
 		int updateResult = articleService.updated(article,LoginUser.getId());
 		return updateResult>0;
+	}
+	
+	@RequestMapping("logout")
+	public String logout(HttpServletRequest request){
+		request.getSession().removeAttribute(Contantant.USER_KEY);
+		return "redirect:/";
 	}
 	
 }

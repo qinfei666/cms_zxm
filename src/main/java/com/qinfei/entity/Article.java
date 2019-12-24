@@ -23,6 +23,15 @@ public class Article {
 	private Channel channel   ;
 	private category category  ;
 	private User user     ;
+	private int complaincnt;
+	
+	
+	public int getComplaincnt() {
+		return complaincnt;
+	}
+	public void setComplaincnt(int complaincnt) {
+		this.complaincnt = complaincnt;
+	}
 	public Integer getId() {
 		return id;
 	}
@@ -140,7 +149,8 @@ public class Article {
 				+ ", deleted=" + deleted + ", created=" + created
 				+ ", updated=" + updated + ", commentCnt=" + commentCnt
 				+ ", articleType=" + articleType + ", channel=" + channel
-				+ ", category=" + category + ", user=" + user + "]";
+				+ ", category=" + category + ", user=" + user
+				+ ", complaincnt=" + complaincnt + "]";
 	}
 	@Override
 	public int hashCode() {

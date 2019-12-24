@@ -39,4 +39,37 @@
  	<select id="getById" resultMap="artMapper">
  		SELECT * FROM cms_article WHERE id=#{value} AND deleted=0
  	</select>
+ 	
+ 	<!-- 获取热门文章 -->
+ 	<select id="hotList" resultMap="artMapper">
+ 		select id,title,channel_id,category_id,user_id,created,picture
+ 		from cms_article
+ 		where status=1 and deleted=0
+ 		 AND hot=1
+ 		order by id desc
+ 	</select>
+ 	
+ 	<!-- 获取最新文章 -->
+ 	<select id="lastList" resultMap="artMapper">
+ 		select id,title,channel_id,category_id,user_id,created,picture
+ 		from cms_article
+ 		where status=1 and deleted=0
+ 		 AND hot=1
+ 		order by id desc
+ 		LIMIT #{value}
+ 	</select>
+ 	
+ 	<select id="getArtcles" resultMap="artMapper">
+ 		select id,title,channel_id,category_id,user_id,created,picture
+ 		from cms_article
+ 		where status=1 and deleted=0
+ 		 AND channel_id=#{channleId}
+ 		 <if test="catId!=0">
+ 		 AND	category_id=#{catId}
+ 		 </if>
+ 		 
+ 		order by id desc
+ 		
+ 	</select>
+ 	
   </mapper>

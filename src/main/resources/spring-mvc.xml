@@ -31,6 +31,13 @@
 			<mvc:exclude-mapping path="/user/register" />
 			<mvc:exclude-mapping path="/user/checkname" />
 			<mvc:exclude-mapping path="/resource/**" />
+			<mvc:exclude-mapping path="/index/**" />
+			<mvc:exclude-mapping path="/channel/**" />
+			<mvc:exclude-mapping path="/article/detail" />
+			<mvc:exclude-mapping path="/article/comments" />
+			<mvc:exclude-mapping path="/article/postcomment" />
+			<mvc:exclude-mapping path="/article/complain" />
+			<mvc:exclude-mapping path="/" />
 			<bean class="com.qinfei.web.CmsInterceptor"></bean>
 		</mvc:interceptor>
 	</mvc:interceptors> 

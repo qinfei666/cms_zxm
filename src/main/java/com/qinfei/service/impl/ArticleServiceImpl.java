@@ -9,8 +9,12 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.qinfei.common.Contantant;
 import com.qinfei.dao.ArticleMapper;
+import com.qinfei.dao.SlideMapper;
 import com.qinfei.entity.Article;
 import com.qinfei.entity.Channel;
+import com.qinfei.entity.Comment;
+import com.qinfei.entity.Complain;
+import com.qinfei.entity.Slide;
 import com.qinfei.entity.category;
 import com.qinfei.service.ArticleService;
 
@@ -19,6 +23,8 @@ public class ArticleServiceImpl implements ArticleService {
 
 	@Autowired
 	ArticleMapper articleMapper;
+	@Autowired
+	SlideMapper slideMapper;
 	@Override
 	public PageInfo<Article> listByUser(Integer id, int pageNum) {
 		// TODO Auto-generated method stub
@@ -88,5 +94,55 @@ public class ArticleServiceImpl implements ArticleService {
 	public int setHot(int id, int status) {
 		// TODO Auto-generated method stub
 		return articleMapper.setHot(id,status);
+	}
+	@Override
+	public List<Slide> getSlides() {
+		// TODO Auto-generated method stub
+		return slideMapper.list();
+	}
+	@Override
+	public PageInfo<Article> hotList(int page) {
+		// TODO Auto-generated method stub
+		PageHelper.startPage(page, Contantant.PAGE_SIZE);
+		return new PageInfo<Article>(articleMapper.hotList());
+	}
+	@Override
+	public List<Article> lastList() {
+		// TODO Auto-generated method stub
+		return articleMapper.lastList(Contantant.PAGE_SIZE);
+	}
+	@Override
+	public PageInfo<Article> getArtcles(int channleId, int catId, int page) {
+		// TODO Auto-generated method stub
+		PageHelper.startPage(page, Contantant.PAGE_SIZE);
+		return new PageInfo<Article>(articleMapper.getArtcles(channleId,catId));
+	}
+	@Override
+	public List<category> getCategoriesByChannelId(int channleId) {
+		// TODO Auto-generated method stub
+		return articleMapper.getCategoriesByChannelId(channleId);
+	}
+	@Override
+	public int addComment(Comment comment) {
+		// TODO Auto-generated method stub
+		int result = articleMapper.addComment(comment);
+		if (result>0) 
+			 articleMapper.increaseCommentCnt(comment.getArticleId());
+		return result;
+	}
+	@Override
+	public PageInfo<Comment> getComments(int articleid, int page) {
+		// TODO Auto-generated method stub
+		PageHelper.startPage(page, Contantant.PAGE_SIZE);
+		return new PageInfo<Comment>(articleMapper.getComments(articleid));
+	}
+	@Override
+	public int addComplian(Complain complain) {
+		// TODO Auto-generated method stub
+		int result = articleMapper.addCoplain(complain);
+		if (result>0) {
+			articleMapper.increaseComplainCnt(complain.getArticleId());
+		}
+		return 0;
 	}
 }
